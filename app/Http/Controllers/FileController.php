@@ -4,82 +4,74 @@ namespace App\Http\Controllers;
 
 use App\Models\File;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class FileController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
-        //
+        $files = File::paginate(10)->withQueryString();
+        return view('suratPenting.manage', compact('files'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    public function addFile(Request $request)
     {
-        //
+
+        $request->validate([
+            'fileName' => 'required',
+            'fileDescription' => 'required|max:200',
+            'fileDoc' => 'required',
+            'fileDoc.*' => 'file|mimes:doc,docx,pdf,xls,xlsx,ppt,pptx',
+        ]);
+
+        $suratPenting = $request->file('fileDoc');
+        $name = $suratPenting->getClientOriginalName();
+        $suratPentingName = now()->timestamp.'_'.$name;
+
+        $suratPentingUrl = Storage::disk('public')->putFileAs('ListFile', $suratPenting, $suratPentingName);
+
+        File::create([
+            'name' => $request->fileName,
+            'description' => $request->fileDescription,
+            'doc' => $suratPentingUrl,
+        ]);
+
+        return redirect()->route('file.read');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
+    public function updateFileForm($id){
+        $file = File::findorFail($id);
+        return view('suratPenting.updateForm', compact('file'));
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\File  $file
-     * @return \Illuminate\Http\Response
-     */
-    public function show(File $file)
-    {
-        //
+    public function updateFileLogic(Request $request, $id){
+
+        $request->validate([
+            'fileName' => 'required',
+            'fileDescription' => 'required',
+            'fileDoc' => 'required',
+            'fileDoc.*' => 'file|mimes:doc,docx,pdf,xls,xlsx,ppt,pptx',
+        ]);
+
+        $suratPenting = $request->file('fileDoc');
+        $name = $suratPenting->getClientOriginalName();
+        $suratPentingName = now()->timestamp.'_'.$name;
+
+        $suratPentingUrl = Storage::disk('public')->putFileAs('ListFile', $suratPenting, $suratPentingName);
+        
+        File::findOrFail($id)->update([
+            'name' => $request->fileName,
+            'description' => $request->fileDescription,
+            'doc' => $suratPentingUrl,
+        ]);
+
+        return redirect()->route('file.read');
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\File  $file
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(File $file)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\File  $file
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, File $file)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\File  $file
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(File $file)
-    {
-        //
+    public function deleteFile(Request $request){
+        $file = File::find($request->id);
+        $file->delete();
+        
+        return redirect()->route('file.read');
     }
 }
