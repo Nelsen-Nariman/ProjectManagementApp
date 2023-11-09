@@ -1,7 +1,7 @@
 @extends('template.layout')
 
 @section('title')
-    Documentation
+    PDF View
 @endsection
 
 @section('styling')
@@ -12,7 +12,7 @@
 @section('content')
 
 
-<div class="heading" style="display: flex; justify-content: center; gap: 2rem; margin-top: 3rem;">
+{{-- <div class="heading" style="display: flex; justify-content: center; gap: 21.5rem; margin-top: 3rem;">
         <div class="btn1">
             <a href="{{ route('documentation.addForm') }}" style="text-decoration: none !important;
             color: white !important;">
@@ -21,16 +21,7 @@
                 </button>
             </a>
         </div>
-
-        <div class="btn2">
-            <a href="{{ route('pdf.convert') }}" style="text-decoration: none !important;
-            color: white !important;">
-                <button type="button" class="btn btn-success">
-                        Convert PDF
-                </button>
-            </a>
-        </div>
-</div>
+</div> --}}
 
 
 @foreach ($documentations as $documentation)
@@ -49,7 +40,7 @@
             <div class="card-body">
                 <div class="layouting" style="display: flex; justify-content: space-between;">
                     <h5 class="card-title">{{ $documentation->name }}</h5>
-                    <div class="modified" style="display: flex; justify-content: space-evenly; gap: 1rem; padding-bottom: 20px">
+                    {{-- <div class="modified" style="display: flex; justify-content: space-evenly; gap: 1rem; padding-bottom: 20px">
                         <a href="{{ route('documentation.update', $documentation->id) }}" style="text-decoration: none !important;
                             color: black !important;">
                             <img src="/images/edit.png" width="25px">
@@ -61,7 +52,7 @@
                                 <img src="/images/delete.png" width="25px">
                             </button>  
                         </form>
-                    </div>
+                    </div> --}}
                 </div>
                 <p class="card-text">{{ $documentation->description }}</p>
             </div>

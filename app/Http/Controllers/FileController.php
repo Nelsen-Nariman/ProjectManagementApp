@@ -70,6 +70,8 @@ class FileController extends Controller
 
     public function deleteFile(Request $request){
         $file = File::find($request->id);
+        $suratPenting_path = public_path().'\storage/'.$file->doc;
+        unlink($suratPenting_path);
         $file->delete();
         
         return redirect()->route('file.read');
