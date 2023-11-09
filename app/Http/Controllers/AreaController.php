@@ -5,81 +5,48 @@ namespace App\Http\Controllers;
 use App\Models\Area;
 use Illuminate\Http\Request;
 
-class AreaController extends Controller
-{
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+class AreaController extends Controller{
+    public function addArea(Request $request, $project_id)
     {
-        //
+        $request->validate([
+            'name' => 'required',
+            'description' => 'required|max:200',
+        ]);
+
+        $areaInput = $request->all();
+        $areaInput['project_id'] = $project_id;
+
+        Area::create($areaInput);
+
+        return redirect()->route('area.read');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    public function updateFormArea($id)
     {
-        //
+        $area = Area::findOrFail($id);
+        return view('area.updateForm', compact('area'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+    public function updateArea($id)
     {
-        //
+        $request->validate([
+            'name' => 'required',
+            'description' => 'required|max:200',
+        ]);
+        
+        Project::findOrFail($id)->update([
+            'name' => $request->projectName,
+            'description' => $request->projectDescription,
+        ]);
+
+        return redirect()->route('area.read');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Area  $area
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Area $area)
+    public function deleteArea(Request $request)
     {
-        //
-    }
+        $area = Area::findOrFail($request->id);
+        $area->delete();
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Area  $area
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Area $area)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Area  $area
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Area $area)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Area  $area
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Area $area)
-    {
-        //
+        return redirect()->route('area.read');
     }
 }

@@ -21,10 +21,6 @@ return new class extends Migration
             $table->string('priority');
             $table->dateTime('deadline');
             $table->string('status');
-            $table->foreignId('area_id')->references('id')->on('areas')->onUpdate('cascade')
-            ->onDelete('cascade');
-            $table->foreignId('file_id')->references('id')->on('files')->onUpdate('cascade')
-            ->onDelete('cascade');
             $table->timestamps();
             $table->softDeletes();
 

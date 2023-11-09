@@ -12,7 +12,8 @@ class File extends Model
     protected $fillable = [
         'name',
         'description',
-        'doc'
+        'doc',
+        'project_id'
     ];
 
     public function project() {

@@ -5,81 +5,82 @@ namespace App\Http\Controllers;
 use App\Models\Project;
 use Illuminate\Http\Request;
 
-class ProjectController extends Controller
-{
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+class ProjectController extends Controller{
     public function index()
     {
-        //
+        $projects = Project::paginate(10)->withQueryString();
+        return view('project.read', compact('projects'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    public function sortingByProgress()
     {
-        //
+        $sorted = $projects->sortByDesc('progress');
+        echo $sorted->values()->all();  
+
+        return view('project.read', ['projects' => $sorted]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+    public function addProject(Request $request)
     {
-        //
+
+        $request->validate([
+            'projectName' => 'required',
+            'projectDescription' => 'required|max:200',
+            'projectAddress' => 'required',
+            'projectProgress' => 'required|numeric|min: 1|max: 100',
+            'projectPriority' => 'required',
+            'projectDeadline' => 'required|date',
+            'projectStatus' => 'required',
+        ]);
+
+        $project = Project::create([
+            'name' => $request->projectName,
+            'description' => $request->projectDescription,
+            'address' => $request->projectAddress,
+            'progress' => $request->projectProgress,
+            'priority' => $request->projectPriority,
+            'deadline' => $request->projectDeadline,
+            'status' => $request->projectStatus,
+        ]);
+
+        return redirect()->route('project.read');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Project  $project
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Project $project)
-    {
-        //
+    public function updateProjectForm($id){
+        $project = Project::findorFail($id);
+        return view('project.updateForm', compact('project'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Project  $project
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Project $project)
-    {
-        //
+    public function updateProject(Request $request, $id){
+
+        $request->validate([
+            'projectName' => 'required',
+            'projectDescription' => 'required|max:200',
+            'projectAddress' => 'required',
+            'projectProgress' => 'required|numeric|min: 1|max: 100',
+            'projectPriority' => 'required',
+            'projectDeadline' => 'required|date',
+            'projectStatus' => 'required',
+        ]);
+        
+        Project::findOrFail($id)->update([
+            'name' => $request->projectName,
+            'description' => $request->projectDescription,
+            'address' => $request->projectAddress,
+            'progress' => $request->projectProgress,
+            'priority' => $request->projectPriority,
+            'deadline' => $request->projectDeadline,
+            'status' => $request->projectStatus,
+        ]);
+
+        return redirect()->route('project.read');
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Project  $project
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Project $project)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Project  $project
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Project $project)
-    {
-        //
+    public function deleteProject(Request $request){
+        $project = Project::find($request->id);
+        $project->delete();
+        
+        return redirect()->route('project.read');
     }
 }
+
