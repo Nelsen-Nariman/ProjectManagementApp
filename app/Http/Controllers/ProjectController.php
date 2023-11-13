@@ -7,77 +7,78 @@ use Illuminate\Http\Request;
 
 class ProjectController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
-        //
+        $projects = Project::paginate(10)->withQueryString();
+
+        $data = [
+            'projects' => $projects,
+            'searchParam' => session('searchParams', [])
+        ];
+
+        return view('contents.project-management.project-list', $data);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    public function search(Request $request)
+    {
+        $query = Project::query();
+
+        if ($request->has("name")) {
+            $query->where("name", "like", "%$request->name%");
+        }
+
+        if ($request->has("year")) {
+            if ($request->year != 1) {
+                $query->whereYear("created_at", $request->year);
+            }
+        }
+
+        if ($request->has("status")) {
+            if ($request->status != 1) {
+                $query->where("status", "like", "%$request->status%");
+            }
+        }
+        
+        $preProjects = $query->paginate(10);
+        $projects = $preProjects->appends($request->query());
+
+        if ($projects->isEmpty()) {
+            return redirect("projects")->with('errorSearch', 'There\'s no such thing as you mentioned before :(');
+        } else {
+            $data = [
+                'projects' => $projects,
+                'searchParams' => $request->all()
+            ];
+
+            return view('contents.project-management.project-list', $data);
+        }
+    }
+
     public function create()
     {
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         //
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Project  $project
-     * @return \Illuminate\Http\Response
-     */
     public function show(Project $project)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Project  $project
-     * @return \Illuminate\Http\Response
-     */
     public function edit(Project $project)
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Project  $project
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, Project $project)
     {
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Project  $project
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(Project $project)
     {
         //

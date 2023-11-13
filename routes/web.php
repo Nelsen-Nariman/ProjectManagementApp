@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ProjectController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -25,9 +26,8 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::middleware(['auth', 'verified'])->group(function() {
-    Route::get('/projects', function () {
-        return view('contents.project-management.project-list');
-    })->name('projects');
+    Route::get('/projects', [ProjectController::class, 'index'])->name('projects');
+    Route::get('/projects/search', [ProjectController::class, 'search'])->name('projects.search');
 
     // Ini untuk user dengan role Admin aja
     Route::middleware('admin')->group(function() {
