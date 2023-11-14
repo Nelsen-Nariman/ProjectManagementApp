@@ -12,7 +12,7 @@ class Area extends Model
     protected $fillable = [
         'name',
         'description',
-        'documentation_id'
+        'project_id'
     ];
 
     public function project() {

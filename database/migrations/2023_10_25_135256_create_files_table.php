@@ -18,6 +18,8 @@ return new class extends Migration
             $table->string('name');
             $table->string('description');
             $table->string('doc');
+            $table->foreignId('project_id')->references('id')->on('projects')->onUpdate('cascade')
+            ->onDelete('cascade');
             $table->timestamps();
             $table->softDeletes();
         });

@@ -54,33 +54,66 @@ class ProjectController extends Controller
         }
     }
 
-    public function create()
+    public function addProject(Request $request)
     {
-        //
+
+        $request->validate([
+            'projectName' => 'required',
+            'projectDescription' => 'required|max:200',
+            'projectAddress' => 'required',
+            'projectProgress' => 'required|numeric|min: 1|max: 100',
+            'projectPriority' => 'required',
+            'projectDeadline' => 'required|date',
+            'projectStatus' => 'required',
+        ]);
+
+        $project = Project::create([
+            'name' => $request->projectName,
+            'description' => $request->projectDescription,
+            'address' => $request->projectAddress,
+            'progress' => $request->projectProgress,
+            'priority' => $request->projectPriority,
+            'deadline' => $request->projectDeadline,
+            'status' => $request->projectStatus,
+        ]);
+
+        return redirect()->route('project.read');
     }
 
-    public function store(Request $request)
-    {
-        //
+    public function updateProjectForm($id){
+        $project = Project::findorFail($id);
+        return view('project.updateForm', compact('project'));
     }
 
-    public function show(Project $project)
-    {
-        //
+    public function updateProject(Request $request, $id){
+
+        $request->validate([
+            'projectName' => 'required',
+            'projectDescription' => 'required|max:200',
+            'projectAddress' => 'required',
+            'projectProgress' => 'required|numeric|min: 1|max: 100',
+            'projectPriority' => 'required',
+            'projectDeadline' => 'required|date',
+            'projectStatus' => 'required',
+        ]);
+        
+        Project::findOrFail($id)->update([
+            'name' => $request->projectName,
+            'description' => $request->projectDescription,
+            'address' => $request->projectAddress,
+            'progress' => $request->projectProgress,
+            'priority' => $request->projectPriority,
+            'deadline' => $request->projectDeadline,
+            'status' => $request->projectStatus,
+        ]);
+
+        return redirect()->route('project.read');
     }
 
-    public function edit(Project $project)
-    {
-        //
-    }
-
-    public function update(Request $request, Project $project)
-    {
-        //
-    }
-
-    public function destroy(Project $project)
-    {
-        //
+    public function deleteProject(Request $request){
+        $project = Project::find($request->id);
+        $project->delete();
+        
+        return redirect()->route('project.read');
     }
 }
