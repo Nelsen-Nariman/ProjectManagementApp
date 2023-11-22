@@ -1,45 +1,68 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Models\Project;
 
 use App\Models\Area;
 use Illuminate\Http\Request;
 
 class AreaController extends Controller{
-    public function addArea(Request $request, $project_id)
+
+    public function index($project_id)
     {
-        $request->validate([
-            'name' => 'required',
-            'description' => 'required|max:200',
-        ]);
+        $project = Project::findOrFail($project_id);
 
-        $areaInput = $request->all();
-        $areaInput['project_id'] = $project_id;
+        $areas = $project->areas()->paginate(10);
+        return view('contents.area-management.area-list', compact('areas', 'project_id'));
+    }
 
-        Area::create($areaInput);
+    public function addArea(Request $request, $project_id)
+{
+    $request->validate([
+        'areaName' => 'required',
+        'areaDescription' => 'required|max:200',
+    ]);
 
-        return redirect()->route('area.read');
+    Area::create([
+        'name' => $request->areaName,
+        'description' => $request->areaDescription,
+        'project_id' => $project_id,
+    ]);
+    
+
+    // Retrieve areas after adding the new one
+    $project = Project::findOrFail($project_id);
+    $areas = $project->areas()->paginate(10);
+
+    return view('contents.area-management.area-list', compact('areas', 'project_id'));
+}
+
+    public function showAddAreaForm($project_id)
+    {
+        return view('contents.area-management.add-area', compact('project_id'));
     }
 
     public function updateFormArea($id)
     {
         $area = Area::findOrFail($id);
-        return view('area.updateForm', compact('area'));
+        return view('contents.area-management.update-area', compact('area'));
     }
 
-    public function updateArea($id)
+    public function updateArea(Request $request,$id)
     {
         $request->validate([
-            'name' => 'required',
-            'description' => 'required|max:200',
+            'areaName' => 'required',
+            'areaDescription' => 'required|max:200',
         ]);
         
-        Project::findOrFail($id)->update([
-            'name' => $request->projectName,
-            'description' => $request->projectDescription,
+        $area = Area::findOrFail($id);
+
+        Area::findOrFail($id)->update([
+            'name' => $request->areaName,
+            'description' => $request->areaDescription,
         ]);
 
-        return redirect()->route('area.read');
+        return redirect()->route('areas.index', $area->project_id);
     }
 
     public function deleteArea(Request $request)
@@ -47,6 +70,6 @@ class AreaController extends Controller{
         $area = Area::findOrFail($request->id);
         $area->delete();
 
-        return redirect()->route('area.read');
+        return redirect()->route('areas.index');
     }
 }

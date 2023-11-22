@@ -19,6 +19,23 @@ class ProjectController extends Controller
         return view('contents.project-management.project-list', $data);
     }
 
+    public function sorting($typeSorting)
+    {
+        $sorted;
+
+        if ($typeSorting === "byProgress") {
+            $sorted = Project::orderBy('progress', 'desc')->paginate(10)->withQueryString();
+        }else if ($typeSorting === "byName") {
+            $sorted = Project::orderBy('name', 'asc')->paginate(10)->withQueryString();
+        }
+        
+        $data = [
+            'projects' => $sorted
+        ];
+
+        return view('contents.project-management.project-list', $data);
+    }
+
     public function search(Request $request)
     {
         $query = Project::query();
@@ -61,28 +78,31 @@ class ProjectController extends Controller
             'projectName' => 'required',
             'projectDescription' => 'required|max:200',
             'projectAddress' => 'required',
-            'projectProgress' => 'required|numeric|min: 1|max: 100',
             'projectPriority' => 'required',
-            'projectDeadline' => 'required|date',
-            'projectStatus' => 'required',
+            'projectDeadline' => 'required',
         ]);
 
-        $project = Project::create([
+        $date = \DateTime::createFromFormat('d-m-Y', $request->projectDeadline);
+        $deadline = $date->format('Y-m-d');
+
+        $projects =Project::create([
             'name' => $request->projectName,
             'description' => $request->projectDescription,
             'address' => $request->projectAddress,
-            'progress' => $request->projectProgress,
+            'progress' => 0,
             'priority' => $request->projectPriority,
-            'deadline' => $request->projectDeadline,
-            'status' => $request->projectStatus,
+            'deadline' => $deadline,
+            'status' => "On Progress",
         ]);
 
-        return redirect()->route('project.read');
+        return redirect()->route('projects');
     }
 
     public function updateProjectForm($id){
         $project = Project::findorFail($id);
-        return view('project.updateForm', compact('project'));
+        $dateTime = new \DateTime($project->deadline);
+        $project->deadline = $dateTime->format('d-m-Y');
+        return view('contents.project-management.update-project', compact('project'));
     }
 
     public function updateProject(Request $request, $id){
@@ -91,23 +111,32 @@ class ProjectController extends Controller
             'projectName' => 'required',
             'projectDescription' => 'required|max:200',
             'projectAddress' => 'required',
-            'projectProgress' => 'required|numeric|min: 1|max: 100',
             'projectPriority' => 'required',
-            'projectDeadline' => 'required|date',
-            'projectStatus' => 'required',
+            'projectDeadline' => 'required',
+            'projectProgress' => 'required'
         ]);
+
+        $status = "On Progress";
+        $progress = (int)$request->projectProgress; // Casting to integer for comparison
+        
+        if ($progress === 100) {
+            $status = "Completed"; // Add a semicolon here
+        }
+        
+        $date = \DateTime::createFromFormat('d-m-Y', $request->projectDeadline);
+        $deadline = $date->format('Y-m-d');
         
         Project::findOrFail($id)->update([
             'name' => $request->projectName,
             'description' => $request->projectDescription,
             'address' => $request->projectAddress,
-            'progress' => $request->projectProgress,
             'priority' => $request->projectPriority,
-            'deadline' => $request->projectDeadline,
-            'status' => $request->projectStatus,
+            'deadline' => $deadline,
+            'progress' => $request->projectProgress,
+            'status' => $status
         ]);
 
-        return redirect()->route('project.read');
+        return redirect()->route('projects');
     }
 
     public function deleteProject(Request $request){

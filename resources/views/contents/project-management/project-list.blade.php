@@ -79,11 +79,37 @@
         @endif
 
         {{-- Di bawah ini untuk project --}}
+
+        <div class="heading" style="display: flex; justify-content: center; gap: 2rem; margin-top: 3rem;">
+            <div class="btn1">
+                <a href="{{ route('add.project') }}" style="text-decoration: none !important;
+                color: white !important;">
+                    <button style="background-color: black" type="button" class="btn btn-secondary">
+                            Add Project
+                    </button>
+                </a>
+            </div>
+        </div>
+
+        <div class="d-grid gap-2 d-md-block" style="padding-top: 10px">
+            <a href="{{ route('sorting', ['typeSorting' => 'byProgress']) }}" class="btn btn-primary" style="background-color: #D2B832; border: none">Progress</a>
+            <a href="{{ route('sorting', ['typeSorting' => 'byName']) }}" class="btn btn-primary">A - Z</a>
+        </div>
+
         @foreach ($projects as $project)
-            <div class="card" style="width: 18rem;">
+            <div class="card" style="margin-top: 20px">
                 <div class="card-body">
                     <h5 class="card-title">{{ $project->name }}</h5>
-                    <h6 class="card-subtitle mb-2 text-muted">{{ $project->status }}</h6>
+
+                    <p class="card-text"><i class="fas fa-map-marker-alt" style="padding-right: 7px; color: #8F8F8F"></i>  {{ $project->address }}</p>
+                    <div class="progress" style="margin-top: 10px">
+                        <div class="progress-bar" role="progressbar" style="width: {{$project->progress}}%;" aria-valuenow="{{$project->progress}}" aria-valuemin="0" aria-valuemax="100">{{$project->progress}}%</div>
+                    </div>
+                    <div class="d-grid gap-2 d-md-block" style="padding-top: 10px">
+                        <a href="{{ route('project.updateForm', $project->id) }}" class="btn btn-primary" style="background-color: #D2B832; border: none">Update</a>
+                        <a href="{{ route('areas.index', ['project_id' => $project->id]) }}" class="btn btn-primary">Area</a>
+                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                    </div>
                 </div>
             </div>
         @endforeach
