@@ -4,82 +4,74 @@ namespace App\Http\Controllers;
 
 use App\Models\Documentation;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class DocumentationController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
-        //
+        $documentations = Documentation::paginate(10)->withQueryString();
+        return view('documentation.manage', compact('documentations'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    public function addDocumentation(Request $request)
     {
-        //
+
+        $request->validate([
+            'documentationName' => 'required',
+            'documentationDescription' => 'required|max:200',
+            'documentationImage' => 'required',
+            'documentationImage.*' => 'file|mimes:jpg,png,jpeg',
+        ]);
+
+        $file = $request->file('documentationImage');
+        $name = $file->getClientOriginalName();
+        $filename = now()->timestamp.'_'.$name;
+
+        $imageUrl = Storage::disk('public')->putFileAs('ListImage', $file, $filename);
+
+        Documentation::create([
+            'name' => $request->documentationName,
+            'description' => $request->documentationDescription,
+            'image' => $imageUrl,
+        ]);
+
+        return redirect()->route('documentation.read');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
+    public function updateDocumentationForm($id){
+        $documentation = Documentation::findorFail($id);
+        return view('documentation.updateForm', compact('documentation'));
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Documentation  $documentation
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Documentation $documentation)
-    {
-        //
+    public function updateDocumentationLogic(Request $request, $id){
+
+        $request->validate([
+            'documentationName' => 'required',
+            'documentationDescription' => 'required',
+            'documentationImage' => 'required',
+            'documentationImage.*' => 'file|mimes:jpg,png,jpeg',
+        ]);
+
+        $file = $request->file('documentationImage');
+        $name = $file->getClientOriginalName();
+        $filename = now()->timestamp.'_'.$name;
+
+        $imageUrl = Storage::disk('public')->putFileAs('ListImage', $file, $filename);
+        
+        Documentation::findOrFail($id)->update([
+            'name' => $request->documentationName,
+            'description' => $request->documentationDescription,
+            'image' => $imageUrl,
+        ]);
+
+        return redirect()->route('documentation.read');
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Documentation  $documentation
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Documentation $documentation)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Documentation  $documentation
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Documentation $documentation)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Documentation  $documentation
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Documentation $documentation)
-    {
-        //
+    public function deleteDocumentation(Request $request){
+        $documentation = Documentation::find($request->id);
+        $documentation->delete();
+        
+        return redirect()->route('documentation.read');
     }
 }

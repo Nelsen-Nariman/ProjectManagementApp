@@ -7,74 +7,36 @@ use Illuminate\Http\Request;
 
 class ProjectUserController extends Controller
 {
-    public function index()
+    public function addProjectUser($project_id, $user_id)
     {
+        $projectUser['project_id'] = $project_id;
+        $projectUser['user_id'] = $user_id;
+
+
+        Project_User::create($projectUser);
+
+        return redirect()->route('projectUser.read');
+    }
+
+    // public function updateProjectUser(Request $request, $project_id, $user_id)
+    // {
+    //     $request->validate([
+    //         'user_id' => 'required',
+    //     ]);
         
-    }
+    //     ProjectUser::findOrFail($id)->update([
+    //         'user_id' => $request->user_id,
+    //     ]);
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
+    //     return redirect()->route('projectUser.read');
+    // }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+    public function deleteProjectUser(Request $request)
     {
-        //
-    }
+        $projectUser = Project_User::findOrFail($request->id);
+        $projectUser->delete();
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Project_User  $project_User
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Project_User $project_User)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Project_User  $project_User
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Project_User $project_User)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Project_User  $project_User
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Project_User $project_User)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Project_User  $project_User
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Project_User $project_User)
-    {
-        //
+        return redirect()->route('projectUser.read');
+        
     }
 }
