@@ -12,6 +12,7 @@ class ProjectUserController extends Controller
         $projectUser['project_id'] = $project_id;
         $projectUser['user_id'] = $user_id;
 
+
         Project_User::create($projectUser);
 
         return redirect()->route('projectUser.read');

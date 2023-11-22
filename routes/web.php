@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\AreaController;
 use Illuminate\Support\Facades\Route;
 
@@ -23,7 +24,6 @@ Route::get('/', function () {
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    // Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
 Route::middleware(['auth', 'verified'])->group(function() {
@@ -43,12 +43,11 @@ Route::middleware(['auth', 'verified'])->group(function() {
 
     // Ini untuk user dengan role Admin aja
     Route::middleware('admin')->group(function() {
-        Route::get('/workers', function() {
-            return view('contents.worker-management.worker-list');
-        })->name('workers');
-        // Route::get('/addProject', function(){
-        //     return view('contents.project-management.add-project');
-        // })->name('add.project');
+        Route::get('/workers', [UserController::class, 'index'])->name('workers');
+        Route::get('/workers/search', [UserController::class, 'search'])->name('workers.search');
+        Route::get('/workers/{user_id}', [UserController::class, 'show'])->name('worker.detail');
+
+        Route::delete('/workers/{user_id}', [UserController::class, 'destroy'])->name('worker.destroy');
     });
 });
 
