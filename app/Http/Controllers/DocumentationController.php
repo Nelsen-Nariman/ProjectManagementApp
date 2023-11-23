@@ -72,7 +72,6 @@ class DocumentationController extends Controller
         $documentation = Documentation::find($request->id);
         $image_path = public_path().'\storage/'.$documentation->image;
         unlink($image_path);
-        $documentation->delete();
         
         return redirect()->route('documentation.read');
     }

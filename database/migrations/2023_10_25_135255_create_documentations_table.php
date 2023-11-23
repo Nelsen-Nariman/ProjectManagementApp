@@ -18,6 +18,8 @@ return new class extends Migration
             $table->string('name');
             $table->string('description');
             $table->string('image');
+            $table->foreignId('area_id')->references('id')->on('areas')->onUpdate('cascade')
+            ->onDelete('cascade');
             $table->timestamps();
             $table->softDeletes();
         });
