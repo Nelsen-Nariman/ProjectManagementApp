@@ -70,7 +70,8 @@ class DocumentationController extends Controller
 
     public function deleteDocumentation(Request $request){
         $documentation = Documentation::find($request->id);
-        $documentation->delete();
+        $image_path = public_path().'\storage/'.$documentation->image;
+        unlink($image_path);
         
         return redirect()->route('documentation.read');
     }

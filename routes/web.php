@@ -1,5 +1,10 @@
 <?php
 
+
+use App\Http\Controllers\DocumentationController;
+use App\Http\Controllers\FileController;
+use App\Http\Controllers\PDFController;
+use App\Models\Documentation;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\UserController;
@@ -21,6 +26,7 @@ Route::get('/', function () {
     return redirect('/login');
 });
 
+
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -40,6 +46,29 @@ Route::middleware(['auth', 'verified'])->group(function() {
     Route::post('/projects/{project_id}/areas/create', [AreaController::class, 'addArea'])->name('area.create');
     Route::get('/projects/areas/update/{id}' , [AreaController::class , 'updateFormArea'])->name('area.updateForm');
     Route::patch('/projects/areas/updating/{id}' , [AreaController::class , 'updateArea'])->name('area.update');
+  
+    //Documentation
+    Route::prefix('/documentation')->group(function(){
+        Route::get('/read', [DocumentationController::class, 'index'])->name('documentation.read');
+        Route::get('/addForm', function(){return view('documentation.addForm');})->name('documentation.addForm');
+        Route::post('/create', [DocumentationController::class, 'addDocumentation'])->name('documentation.create');
+        Route::get('/update/{id}' , [DocumentationController::class , 'updateDocumentationForm'])->name('documentation.update');
+        Route::patch('/updating/{id}' , [DocumentationController::class , 'updateDocumentationLogic'])->name('documentation.updating');
+        Route::delete('/delete/{id}', [DocumentationController::class, 'deleteDocumentation'])->name('documentation.delete');
+    });
+
+    // PDF Convert
+    Route::get('/pdf/convert', [PDFController::class, 'pdfGeneration'])->name('pdf.convert');
+
+    //Surat Penting
+    Route::prefix('/file')->group(function(){
+        Route::get('/read', [FileController::class, 'index'])->name('file.read');
+        Route::get('/addForm', function(){return view('suratPenting.addForm');})->name('file.addForm');
+        Route::post('/create', [FileController::class, 'addFile'])->name('file.create');
+        Route::get('/update/{id}' , [FileController::class , 'updateFileForm'])->name('file.update');
+        Route::patch('/updating/{id}' , [FileController::class , 'updateFileLogic'])->name('file.updating');
+        Route::delete('/delete/{id}', [FileController::class, 'deleteFile'])->name('file.delete');
+    });
 
     // Ini untuk user dengan role Admin aja
     Route::middleware('admin')->group(function() {
