@@ -1,4 +1,4 @@
-@extends('template.layout')
+@extends('layouts.app')
 
 @section('title')
     Surat Penting
@@ -14,9 +14,9 @@
 
 <div class="heading" style="display: flex; justify-content: center; gap: 21.5rem; margin-top: 3rem;">
         <div class="btn1">
-            <a href="{{ route('file.addForm') }}" style="text-decoration: none !important;
+            <a href="{{ route('file.addForm', ['project_id' => $project_id]) }}" style="text-decoration: none !important;
             color: white !important;">
-                <button type="button" class="btn btn-secondary">
+                <button style="background-color: black" type="button" class="btn btn-secondary">
                         Add File
                 </button>
             </a>
@@ -37,7 +37,7 @@
                         <div class="download-btn" style="padding-right: 20px">
                             @if(file_exists(public_path().'\storage/'.$file->doc))
                                 <a href="{{ asset('storage/'.$file->doc) }}">
-                                    <button class="btn btn-success btn-sm" type="button">
+                                    <button style="background-color: green" class="btn btn-success btn-sm" type="button">
                                         Download
                                     </button>
                                 </a>
@@ -58,7 +58,7 @@
                         </div>
 
                         <div class="delete-btn">
-                            <form action="{{ route('file.delete', $file->id) }}" method="POST">
+                            <form action="{{ route('file.delete', ['id' => $file->id, 'area_id' => $file->project_id]) }}" method="POST">
                                 @csrf
                                 @method('DELETE')
                                 <button style="border: none; background-color: white;">

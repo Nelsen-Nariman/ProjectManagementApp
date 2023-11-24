@@ -49,9 +49,9 @@ Route::middleware(['auth', 'verified'])->group(function() {
   
     //Documentation
     Route::prefix('/documentation')->group(function(){
-        Route::get('/read', [DocumentationController::class, 'index'])->name('documentation.read');
-        Route::get('/addForm', function(){return view('documentation.addForm');})->name('documentation.addForm');
-        Route::post('/create', [DocumentationController::class, 'addDocumentation'])->name('documentation.create');
+        Route::get('/read/{area_id}', [DocumentationController::class, 'index'])->name('documentation.read');
+        Route::get('/addForm/{area_id}', [DocumentationController::class, 'showAddDocumentationForm'])->name('documentation.addForm');
+        Route::post('/create/{area_id}', [DocumentationController::class, 'addDocumentation'])->name('documentation.create');
         Route::get('/update/{id}' , [DocumentationController::class , 'updateDocumentationForm'])->name('documentation.update');
         Route::patch('/updating/{id}' , [DocumentationController::class , 'updateDocumentationLogic'])->name('documentation.updating');
         Route::delete('/delete/{id}', [DocumentationController::class, 'deleteDocumentation'])->name('documentation.delete');
@@ -62,9 +62,9 @@ Route::middleware(['auth', 'verified'])->group(function() {
 
     //Surat Penting
     Route::prefix('/file')->group(function(){
-        Route::get('/read', [FileController::class, 'index'])->name('file.read');
-        Route::get('/addForm', function(){return view('suratPenting.addForm');})->name('file.addForm');
-        Route::post('/create', [FileController::class, 'addFile'])->name('file.create');
+        Route::get('/read/{project_id}', [FileController::class, 'index'])->name('file.read');
+        Route::get('/addForm/{project_id}', [FileController::class, 'showAddFileForm'])->name('file.addForm');
+        Route::post('/create/{project_id}', [FileController::class, 'addFile'])->name('file.create');
         Route::get('/update/{id}' , [FileController::class , 'updateFileForm'])->name('file.update');
         Route::patch('/updating/{id}' , [FileController::class , 'updateFileLogic'])->name('file.updating');
         Route::delete('/delete/{id}', [FileController::class, 'deleteFile'])->name('file.delete');
