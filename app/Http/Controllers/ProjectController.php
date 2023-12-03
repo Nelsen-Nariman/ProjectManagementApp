@@ -21,7 +21,7 @@ class ProjectController extends Controller
 
     public function sorting($typeSorting)
     {
-        $sorted;
+        $sorted = null;
 
         if ($typeSorting === "byProgress") {
             $sorted = Project::orderBy('progress', 'desc')->paginate(10)->withQueryString();
@@ -38,6 +38,7 @@ class ProjectController extends Controller
 
     public function search(Request $request)
     {
+        // dd($request->all());
         $query = Project::query();
 
         if ($request->has("name")) {
@@ -53,6 +54,12 @@ class ProjectController extends Controller
         if ($request->has("status")) {
             if ($request->status != 1) {
                 $query->where("status", "like", "%$request->status%");
+            }
+        }
+
+        if ($request->has("priority")) {
+            if ($request->priority != 1) {
+                $query->where("priority", "like", "%$request->priority%");
             }
         }
         
