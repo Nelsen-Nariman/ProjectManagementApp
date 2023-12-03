@@ -1,4 +1,4 @@
-@extends('template.layout')
+@extends('layouts.app')
 
 @section('title')
     Documentation
@@ -14,9 +14,9 @@
 
 <div class="heading" style="display: flex; justify-content: center; gap: 2rem; margin-top: 3rem;">
         <div class="btn1">
-            <a href="{{ route('documentation.addForm') }}" style="text-decoration: none !important;
+            <a href="{{ route('documentation.addForm', ['area_id' => $area_id]) }}" style="text-decoration: none !important;
             color: white !important;">
-                <button type="button" class="btn btn-secondary">
+                <button style="background-color: black" type="button" class="btn btn-secondary">
                         Add Documentation
                 </button>
             </a>
@@ -25,7 +25,7 @@
         <div class="btn2">
             <a href="{{ route('pdf.convert') }}" style="text-decoration: none !important;
             color: white !important;">
-                <button type="button" class="btn btn-success">
+                <button style="background-color: green" type="button" class="btn btn-success">
                         Convert PDF
                 </button>
             </a>
@@ -54,7 +54,7 @@
                             color: black !important;">
                             <img src="/images/edit.png" width="25px">
                         </a>
-                        <form action="{{ route('documentation.delete', $documentation->id) }}" method="POST">
+                        <form action="{{ route('documentation.delete', ['id' => $documentation->id, 'area_id' => $documentation->area_id]) }}" method="POST">
                             @csrf
                             @method('DELETE')
                             <button style="border: none; background-color: white;">

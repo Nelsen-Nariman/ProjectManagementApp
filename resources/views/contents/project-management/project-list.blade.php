@@ -107,8 +107,8 @@
                     </div>
                     <div class="d-grid gap-2 d-md-block" style="padding-top: 10px">
                         <a href="{{ route('project.updateForm', $project->id) }}" class="btn btn-primary" style="background-color: #D2B832; border: none">Update</a>
-                        <a href="{{ route('areas.index', ['project_id' => $project->id]) }}" class="btn btn-primary">Area</a>
-                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                        <a href="{{ route('areas.index', ['project_id' => $project->id]) }}" class="btn btn-primary">Dokumentasi</a>
+                        <a href="{{ route('file.read', ['project_id' => $project->id]) }}" class="btn btn-primary">Surat Penting</a>
                     </div>
                 </div>
             </div>

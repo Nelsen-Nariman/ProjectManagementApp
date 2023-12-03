@@ -1,4 +1,4 @@
-@extends('template.layout')
+@extends('layouts.app')
 
 @section('title')
     updateForm
@@ -12,7 +12,7 @@
 @section('content')
 
     <div class="back-btn" style="padding-left: 16rem; margin-top: 3rem;">
-        <a href="{{ route('file.read') }}" style=" text-decoration: none !important;
+        <a href="{{ route('file.read', ['project_id' => $file->project_id]) }}" style=" text-decoration: none !important;
         color: white !important;">
         <button class="btn btn-secondary">
             Back

@@ -13,7 +13,8 @@ class AreaController extends Controller{
         $project = Project::findOrFail($project_id);
 
         $areas = $project->areas()->paginate(10);
-        return view('contents.area-management.area-list', compact('areas', 'project_id'));
+        // dd($areas);
+        return view('contents.project-management.area-management.area-list', compact('areas', 'project_id'));
     }
 
     public function addArea(Request $request, $project_id)
@@ -34,18 +35,18 @@ class AreaController extends Controller{
     $project = Project::findOrFail($project_id);
     $areas = $project->areas()->paginate(10);
 
-    return view('contents.area-management.area-list', compact('areas', 'project_id'));
+    return view('contents.project-management.area-management.area-list', compact('areas', 'project_id'));
 }
 
     public function showAddAreaForm($project_id)
     {
-        return view('contents.area-management.add-area', compact('project_id'));
+        return view('contents.project-management.area-management.add-area', compact('project_id'));
     }
 
     public function updateFormArea($id)
     {
         $area = Area::findOrFail($id);
-        return view('contents.area-management.update-area', compact('area'));
+        return view('contents.project-management.area-management.update-area', compact('area'));
     }
 
     public function updateArea(Request $request,$id)

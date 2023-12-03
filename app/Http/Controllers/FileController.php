@@ -3,18 +3,20 @@
 namespace App\Http\Controllers;
 
 use App\Models\File;
+use App\Models\Project;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class FileController extends Controller
 {
-    public function index()
+    public function index($project_id)
     {
-        $files = File::paginate(10)->withQueryString();
-        return view('suratPenting.manage', compact('files'));
+        $project = Project::findOrFail($project_id);
+        $files = $project->files()->paginate(10);
+        return view('contents.project-management.suratPenting.manage', compact('files', 'project_id'));
     }
 
-    public function addFile(Request $request)
+    public function addFile(Request $request, $project_id)
     {
 
         $request->validate([
@@ -34,14 +36,20 @@ class FileController extends Controller
             'name' => $request->fileName,
             'description' => $request->fileDescription,
             'doc' => $suratPentingUrl,
+            'project_id' => $project_id,
         ]);
 
-        return redirect()->route('file.read');
+        return redirect()->route('file.read', $project_id);
+    }
+
+    public function showAddFileForm($project_id)
+    {
+        return view('contents.project-management.suratPenting.addForm', compact('project_id'));
     }
 
     public function updateFileForm($id){
         $file = File::findorFail($id);
-        return view('suratPenting.updateForm', compact('file'));
+        return view('contents.project-management.suratPenting.updateForm', compact('file'));
     }
 
     public function updateFileLogic(Request $request, $id){
@@ -59,20 +67,23 @@ class FileController extends Controller
 
         $suratPentingUrl = Storage::disk('public')->putFileAs('ListFile', $suratPenting, $suratPentingName);
         
+        $file = File::findOrFail($id);
+
         File::findOrFail($id)->update([
             'name' => $request->fileName,
             'description' => $request->fileDescription,
             'doc' => $suratPentingUrl,
         ]);
 
-        return redirect()->route('file.read');
+        return redirect()->route('file.read', $file->project_id);
     }
 
     public function deleteFile(Request $request){
         $file = File::find($request->id);
         $suratPenting_path = public_path().'\storage/'.$file->doc;
         unlink($suratPenting_path);
-        
-        return redirect()->route('file.read');
+        $file->delete();
+
+        return redirect()->route('file.read', ['project_id' => $file->project_id]);
     }
 }
