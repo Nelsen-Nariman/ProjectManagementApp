@@ -16,8 +16,38 @@
     {{-- Ini untuk search --}}
         <div class="parent-search justify-content-center align-items-center">
             <div class="search">
-                <input type="text" id="search-input" class="form-control" placeholder="Which project is it?">
-                <button id="search-button" class="btn btn-primary">Search</button>
+                <i class="fa fa-search"></i>
+                @php
+                    $placeValue = "Which project is it?";
+
+                    if (isset($searchParams) == true) {
+                        $placeValue = "Searched for ";
+
+                        if ($searchParams['name'] != null) {
+                            $placeValue = $placeValue . $searchParams['name'] . " keyword, ";
+                        }
+
+                        if ($searchParams['year'] != 1) {
+                            $placeValue = $placeValue . $searchParams['year'] . ", ";
+                        } else {
+                            $placeValue = $placeValue . "any year, ";
+                        }
+
+                        if ($searchParams['priority'] != 1) {
+                            $placeValue = $placeValue . strtolower($searchParams['priority']) . " priority, ";
+                        } else {
+                            $placeValue = $placeValue . "all priorities, ";
+                        }
+
+                        if ($searchParams['status'] != 1) {
+                            $placeValue = $placeValue . $searchParams['status'] . " status";
+                        } else {
+                            $placeValue = $placeValue . "all statuses";
+                        }
+                        
+                    }
+                @endphp
+                <input type="text" id="search-input" class="form-control" placeholder="{{ $placeValue }}">
             </div>
         </div>
 
@@ -30,7 +60,6 @@
                     </div>
                         
                     <form action="{{ route('projects.search') }}">
-                        @csrf
                         <div class="modal-body">
                             <div class="form-floating mb-3">
                                 <input type="text"
@@ -52,6 +81,16 @@
                                     @endfor
                                 </select>
                                 <label class="text-primary" for="floatingSelect">Creation Year</label>
+                            </div>
+                            
+                            <div class="form-floating mb-3">
+                                <select class="form-select" id="project-priority" name="priority" aria-label="Project's priority">
+                                    <option value="1" {{ isset($searchParams['priority']) && $searchParams['priority'] == 1 ? 'selected' : '' }}>See all priorities!</option>
+                                    <option value="High" {{ isset($searchParams['priority']) && $searchParams['priority'] == 'High' ? 'selected' : '' }}>High</option>
+                                    <option value="Mid" {{ isset($searchParams['priority']) && $searchParams['priority'] == 'Mid' ? 'selected' : '' }}>Mid</option>
+                                    <option value="Low" {{ isset($searchParams['priority']) && $searchParams['priority'] == 'Low' ? 'selected' : '' }}>Low</option>
+                                </select>
+                                <label class="text-primary" for="project-priority">Priority</label>
                             </div>
 
                             <div class="form-floating mb-3">

@@ -16,10 +16,9 @@
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
         <div class="parent-search justify-content-center align-items-center">
             <form action="{{ route('workers.search') }}">
-                @csrf
                 <div class="search">
+                    <i class="fa fa-search"></i>
                     <input type="text" id="search-input" name="search" class="form-control" placeholder="Who are you searching for?" value="{{ isset($searchParam) ? $searchParam : '' }}">
-                    <button type="submit" id="search-button" class="btn btn-primary">Search</button>
                 </div>
             </form>
         </div>
