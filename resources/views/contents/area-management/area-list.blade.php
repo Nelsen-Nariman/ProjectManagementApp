@@ -46,7 +46,11 @@
                     <p class="card-text">{{ $area->description }}</p>
                     <div class="d-grid gap-2 d-md-block" style="padding-top: 10px">
                         <a href="{{ route('area.updateForm', $area->id) }}" class="btn btn-primary" style="background-color: #D2B832; border: none">Update</a>
-                        <a href="#" class="btn btn-primary">Delete</a>
+                        <form action="{{ route('area.delete', $area->id) }}" method="POST" style="display: inline;">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-primary" style="background-color:red; border-color:red" onclick="return confirm('Are you sure you want to delete this area?')">Delete</button>
+                        </form>
                         <a href="#" class="btn btn-primary">Dokumentasi</a>
                     </div>
                 </div>
