@@ -51,7 +51,7 @@
                             @method('DELETE')
                             <button type="submit" class="btn btn-primary" style="background-color:red; border-color:red" onclick="return confirm('Are you sure you want to delete this area?')">Delete</button>
                         </form>
-                        <a href="#" class="btn btn-primary">Dokumentasi</a>
+                        <a href="{{ route('documentation.read', ['area_id' => $area->id]) }}" class="btn btn-primary">Dokumentasi</a>
                     </div>
                 </div>
             </div>
