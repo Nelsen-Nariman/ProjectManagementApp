@@ -11,7 +11,7 @@
 {{-- Body --}}
 @section('content')
 
-    <div class="back-btn" style="padding-left: 16rem; margin-top: 3rem;">
+    <div class="mt-4">
         <a href="{{ route('documentation.read', ['area_id' => $documentation->area_id]) }}" style=" text-decoration: none !important;
         color: white !important;">
         <button class="btn btn-secondary">
@@ -20,15 +20,14 @@
         </a>
     </div>
 
-    <div class="subtitle" style="padding-inline: 16rem; margin-top: 1rem">
+    <div class="subtitle mt-4">
         <h5 style="background-color: rgb(210, 208, 208); padding-inline: 1rem; padding-block: 0.5rem; border-radius: 3px;">Update Documentation</h5> 
     </div>
 
     <form action="{{ route('documentation.updating', $documentation->id) }}" enctype="multipart/form-data" method="POST">
         @csrf
         @method('PATCH')
-        <div class="background" style="padding-inline: 16rem; padding-bottom: 2rem;">
-            <div class="border" style="padding-inline: 1rem; padding-block: 0.5rem; border: 2px solid; border-radius: 3px;">
+        <div class="background">
                 
                 <div class="mb-3">
                     <label for="exampleInputName1" class="form-label">Name</label>
@@ -62,7 +61,6 @@
 
                 <button type="submit" class="btn btn-outline-secondary mt-4">Update</button>
 
-            </div>
         </div>
     </form>
     

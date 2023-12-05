@@ -11,6 +11,16 @@
 {{-- Body --}}
 @section('content')
 
+<div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+    <div class="mt-4">
+        <a href="{{ route('projects') }}" style=" text-decoration: none !important;
+        color: white !important;">
+            <button class="btn btn-secondary">
+                Back
+            </button>
+        </a>
+    </div>
+</div>
 
 <div class="heading" style="display: flex; justify-content: center; gap: 21.5rem; margin-top: 3rem;">
         <div class="btn1">
@@ -43,7 +53,7 @@
                                 </a>
                             @else
                                 <a href="{{ $file->doc }}">
-                                    <button class="btn btn-success btn-sm" type="button">
+                                    <button style="background-color: green" class="btn btn-success btn-sm" type="button">
                                         Download
                                     </button>
                                 </a>
