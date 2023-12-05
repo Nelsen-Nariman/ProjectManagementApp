@@ -150,6 +150,6 @@ class ProjectController extends Controller
         $project = Project::find($request->id);
         $project->delete();
         
-        return redirect()->route('project.read');
+        return redirect()->route('projects');
     }
 }

@@ -12,6 +12,24 @@
 
 
 @section('content')
+
+    <script>
+        // Function to clear all cookies
+        function clearAllCookies() {
+            const cookies = document.cookie.split("; ");
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i];
+                const eqPos = cookie.indexOf("=");
+                const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+                document.cookie = name + "=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
+            }
+        }
+
+        // Clear all cookies on page load
+        window.onload = function() {
+            clearAllCookies();
+        };
+    </script>
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
             <nav style="margin-left: 20px; --bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);" aria-label="breadcrumb">
@@ -62,6 +80,39 @@
                     </div>
                 </div>
             </div>
+
+
+            <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
+                <div class="max-w-xl">
+                    <header>
+                        <h2 class="text-lg font-medium text-gray-900">
+                            {{ __('Project list') }}
+                        </h2>
+                        <p class="mt-1 text-sm text-gray-600">
+                            {{ __('Project that this worker handles') }}
+                        </p>
+                    </header>
+                    <ul style="list-style-type: disc; padding-left: 15px; padding-top:20px">
+                    @foreach ($worker->projects as $project)
+                        <li class="project-item" style="padding-bottom: 5px; display: flex; align-items: center;">
+                            <span class="project-name" style="flex: 1; margin-right: 10px;">{{ $project->name }}</span>
+                            <form action="{{ route('projectUser.delete',['user_id' => $worker->id, 'project_id' => $project->id]) }}" method="POST">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="delete-button" style="color: grey; border: none; background: none; cursor: pointer;" onclick="return confirm('Are you sure you want to delete this project?')">
+                                    <i class="fa fa-times-circle" aria-hidden="true"></i>
+                                </button>
+                            </form>
+                        </li>
+                    @endforeach
+                    </ul>
+                    <a href="{{ route('worker.assignForm', ['user_id' => $worker->id]) }}" class="w-30 btn btn-primary detail-button">Add more project</a>
+                    
+                </div>
+            </div>
+
+
+
             <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
                 <div class="max-w-xl">
                     <div class="space-y-6">

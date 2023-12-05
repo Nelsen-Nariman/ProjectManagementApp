@@ -50,7 +50,7 @@ class User extends Authenticatable implements MustVerifyEmail
     ];
 
     public function projects() {
-        return $this->belongsToMany(Project::class);
+        return $this->belongsToMany(Project::class, 'project_users', 'user_id', 'project_id');
     }
 
     public function sendPasswordResetNotification($token): void {
