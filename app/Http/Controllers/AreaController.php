@@ -71,6 +71,6 @@ class AreaController extends Controller{
         $area = Area::findOrFail($request->id);
         $area->delete();
 
-        return redirect()->route('areas.index');
+        return redirect()->route('areas.index', $area->project_id);
     }
 }
