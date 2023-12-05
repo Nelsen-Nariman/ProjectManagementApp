@@ -45,6 +45,9 @@
             </form>
         </div>
     </div>
+@endsection
+
+@section('scripting')
     <script>
     // Function to set session value
     function setSessionValue(key, value) {
