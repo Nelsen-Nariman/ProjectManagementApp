@@ -120,7 +120,11 @@ class ProjectController extends Controller
     public function updateProject(Request $request, $id){
 
         $request->validate([
-            'projectName' => 'required',
+            'projectName' => [
+                'required',
+                'unique:projects,name',
+                Rule::unique('projects', 'name')
+            ],
             'projectDescription' => 'required|max:200',
             'projectAddress' => 'required',
             'projectPriority' => 'required',

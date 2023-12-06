@@ -60,8 +60,12 @@ class DocumentationController extends Controller
     public function updateDocumentationLogic(Request $request, $id){
 
         $request->validate([
-            'documentationName' => 'required',
-            'documentationDescription' => 'required',
+            'documentationName' => [
+                'required',
+                'unique:documentations,name',
+                Rule::unique('documentations', 'name')
+            ],
+            'documentationDescription' => 'required|max:200',
             'documentationImage' => 'required',
             'documentationImage.*' => 'file|mimes:jpg,png,jpeg',
         ]);

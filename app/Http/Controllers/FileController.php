@@ -60,8 +60,12 @@ class FileController extends Controller
     public function updateFileLogic(Request $request, $id){
 
         $request->validate([
-            'fileName' => 'required',
-            'fileDescription' => 'required',
+            'fileName' => [
+                'required',
+                'unique:files,name',
+                Rule::unique('files', 'name')
+            ],
+            'fileDescription' => 'required|max:200',
             'fileDoc' => 'required',
             'fileDoc.*' => 'file|mimes:doc,docx,pdf,xls,xlsx,ppt,pptx',
         ]);
