@@ -6,6 +6,7 @@ use App\Models\File;
 use App\Models\Project;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 
 class FileController extends Controller
 {
@@ -20,7 +21,11 @@ class FileController extends Controller
     {
 
         $request->validate([
-            'fileName' => 'required',
+            'fileName' => [
+                'required',
+                'unique:files,name',
+                Rule::unique('files', 'name')
+            ],
             'fileDescription' => 'required|max:200',
             'fileDoc' => 'required',
             'fileDoc.*' => 'file|mimes:doc,docx,pdf,xls,xlsx,ppt,pptx',

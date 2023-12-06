@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Project;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class ProjectController extends Controller
 {
@@ -82,7 +83,11 @@ class ProjectController extends Controller
     {
 
         $request->validate([
-            'projectName' => 'required',
+            'projectName' => [
+                'required',
+                'unique:projects,name',
+                Rule::unique('projects', 'name')
+            ],
             'projectDescription' => 'required|max:200',
             'projectAddress' => 'required',
             'projectPriority' => 'required',

@@ -5,6 +5,7 @@ use App\Models\Project;
 
 use App\Models\Area;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class AreaController extends Controller{
 
@@ -20,7 +21,11 @@ class AreaController extends Controller{
     public function addArea(Request $request, $project_id)
 {
     $request->validate([
-        'areaName' => 'required',
+        'areaName' => [
+            'required',
+            'unique:areas,name',
+            Rule::unique('areas', 'name')
+        ],
         'areaDescription' => 'required|max:200',
     ]);
 

@@ -6,6 +6,7 @@ use App\Models\Area;
 use App\Models\Documentation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 
 class DocumentationController extends Controller
 {
@@ -20,7 +21,11 @@ class DocumentationController extends Controller
     {
 
         $request->validate([
-            'documentationName' => 'required',
+            'documentationName' => [
+                'required',
+                'unique:documentations,name',
+                Rule::unique('documentations', 'name')
+            ],
             'documentationDescription' => 'required|max:200',
             'documentationImage' => 'required',
             'documentationImage.*' => 'file|mimes:jpg,png,jpeg',
