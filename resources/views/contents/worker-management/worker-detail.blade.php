@@ -12,24 +12,6 @@
 
 
 @section('content')
-
-    <script>
-        // Function to clear all cookies
-        function clearAllCookies() {
-            const cookies = document.cookie.split("; ");
-            for (let i = 0; i < cookies.length; i++) {
-                const cookie = cookies[i];
-                const eqPos = cookie.indexOf("=");
-                const name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
-                document.cookie = name + "=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/";
-            }
-        }
-
-        // Clear all cookies on page load
-        window.onload = function() {
-            clearAllCookies();
-        };
-    </script>
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
             <nav style="margin-left: 20px; --bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);" aria-label="breadcrumb">
@@ -173,4 +155,16 @@
             </div>
         </div>
     </div>
+@endsection
+
+@section('scripting')
+    <script>
+    function removeSessionValue(key) {
+        return sessionStorage.removeItem(key);
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        removeSessionValue('checked_projects_session');
+    });
+    </script>
 @endsection

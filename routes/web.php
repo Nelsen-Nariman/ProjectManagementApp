@@ -70,12 +70,13 @@ Route::middleware(['auth', 'verified'])->group(function() {
         Route::delete('/workers/{user_id}', [UserController::class, 'destroy'])->name('worker.destroy');
 
         Route::get('/workers/{user_id}/assign', [ProjectUserController::class, 'index'])->name('worker.assignForm');
-        Route::post('/workers/{user_id}/assign', [ProjectUserController::class, 'create'])->name('worker.assign');
+        Route::post('/worker/assign', [ProjectUserController::class, 'create'])->name('worker.assign');
         Route::delete('/workers/{user_id}/{project_id}/delete', [ProjectUserController::class, 'delete'])->name('projectUser.delete');
 
 
         Route::get('/projects/addProject', function(){return view('contents.project-management.add-project');})->name('add.project');
         Route::post('/projects/create', [ProjectController::class, 'addProject'])->name('project.create');
+        Route::get('/projects/search/toAssign/{user_id}', [ProjectController::class, 'searchToAssign'])->name('project.search.toAssign');
         Route::get('/projects/update/{id}' , [ProjectController::class , 'updateProjectForm'])->name('project.updateForm');
         Route::patch('/projects/updating/{id}' , [ProjectController::class , 'updateProject'])->name('project.update');
         Route::delete('/projects/delete/{id}', [ProjectController::class, 'deleteProject'])->name('project.delete');

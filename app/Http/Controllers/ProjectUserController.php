@@ -49,25 +49,35 @@ class ProjectUserController extends Controller
         session(['selected_projects' => $checkedProjects]);
     }
 
-    public function create(Request $request ,$user_id)
+    public function create(Request $request)
     {
-        // $selectedProjects = $request->input('project_id', []);
-        $selectedProjects = session("selected_projects");
-    
-        // Update the session with the selected projects
-        session(['selected_projects' => $selectedProjects]);
-        
-        $projectIds = $request->input('project_id');
+        $checkedProjects = $request->input('checkedProjects', '');
+        $checkedProjectsArray = explode(",", $checkedProjects);
+        $user_id = $request->input('userId', '');
 
-        // Loop through each project_id and create a user project
-        foreach ($projectIds as $projectId) {
+        foreach ($checkedProjectsArray as $project_id) {
             $userProject = new ProjectUser();
             $userProject->user_id = $user_id;
-            $userProject->project_id = $projectId;
+            $userProject->project_id = $project_id;
             $userProject->save();
         }
+        // // $selectedProjects = $request->input('project_id', []);
+        // $selectedProjects = session("selected_projects");
+    
+        // // Update the session with the selected projects
+        // session(['selected_projects' => $selectedProjects]);
+        
+        // $projectIds = $request->input('project_id');
 
-        return redirect()->route('worker.detail', $user_id);
+        // // Loop through each project_id and create a user project
+        // foreach ($projectIds as $projectId) {
+        //     $userProject = new ProjectUser();
+        //     $userProject->user_id = $user_id;
+        //     $userProject->project_id = $projectId;
+        //     $userProject->save();
+        // }
+        $redirectUrl = '/workers/' . $user_id;
+        return response()->json(['redirect_url' => $redirectUrl]);
     }
 
     // public function updateProjectUser(Request $request, $project_id, $user_id)
