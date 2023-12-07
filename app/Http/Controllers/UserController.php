@@ -47,17 +47,8 @@ class UserController extends Controller
     {
         $worker = User::findOrFail($user_id);
 
-        session()->forget("selected_projects");
-        $selectedProjects = session('selected_projects', []);
-
-        // Additional logic to fetch or process selected projects goes here
-    
-        // Save the selected projects array in the session
-    
-
         $data = [
-            'worker' => $worker,
-            'selectedProjects' => $selectedProjects,
+            'worker' => $worker
         ];
 
         return view('contents.worker-management.worker-detail', $data);

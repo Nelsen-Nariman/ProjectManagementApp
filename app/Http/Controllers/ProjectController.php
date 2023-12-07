@@ -5,13 +5,20 @@ namespace App\Http\Controllers;
 use App\Models\Project;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 
 class ProjectController extends Controller
 {
     public function index()
     {
-        $projects = Project::paginate(10)->withQueryString();
+        $currUser = Auth::user();
+
+        if ($currUser->role != "admin") {
+            $projects = $currUser->projects()->paginate(10)->withQueryString();
+        } elseif ($currUser->role == "admin") {
+            $projects = Project::paginate(10)->withQueryString();
+        }
 
         $data = [
             'projects' => $projects,
@@ -40,7 +47,16 @@ class ProjectController extends Controller
 
     public function search(Request $request)
     {
-        $query = Project::query();
+        $currUser = Auth::user();
+        $query = null;
+        $projects = null;
+
+        if ($currUser->role != "admin") {
+            $query = $currUser->projects()->getQuery();
+        } elseif ($currUser->role == "admin") {
+            $query = Project::query();
+        }
+
 
         if ($request->has("name")) {
             $query->where("name", "like", "%$request->name%");
@@ -63,9 +79,10 @@ class ProjectController extends Controller
                 $query->where("priority", "like", "%$request->priority%");
             }
         }
-        
+
         $preProjects = $query->paginate(10);
         $projects = $preProjects->appends($request->query());
+        
 
         if ($projects->isEmpty()) {
             return redirect("projects")->with('errorSearch', 'There\'s no such thing as you mentioned before :(');
