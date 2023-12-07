@@ -16,13 +16,11 @@ class Project extends Model
         'progress',
         'priority',
         'deadline',
-        'status',
-        'area_id',
-        'file_id',
+        'status'
     ];
 
     public function users() {
-        return $this->belongsToMany(User::class);
+        return $this->belongsToMany(User::class, 'project_users', 'project_id', 'user_id');
     }
 
     public function areas() {

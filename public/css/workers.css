@@ -1,0 +1,36 @@
+/* List */
+#card-title {
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.card-brief-detail {
+    display: flex;
+}
+
+.card-brief-detail img {
+    margin-right: 8px;
+}
+
+.detail-button {
+    margin-top: 16px;
+    background-color: blue!important;
+}
+
+/* Detail */
+.profile-detail {
+    margin-top: 20px;
+}
+
+.detail-data {
+    padding-top: 5px;
+}
+
+.delete-button {
+    display: inline-block;
+}
+
+/* Show delete button when hovering over the project item
+.project-item:hover .delete-button {
+    display: inline-block;
+} */

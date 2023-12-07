@@ -2,84 +2,105 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Project_User;
+use App\Models\ProjectUser;
+use App\Models\Project;
+use App\Models\User;
 use Illuminate\Http\Request;
+
 
 class ProjectUserController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+    public function index($user_id, Request $request)
     {
-        //
+        $user = User::findOrFail($user_id);
+
+        // Fetch projects that the user does not have
+        // $projects = Project::whereNotIn('id', $user->projects()->pluck('projects.id'));
+        $projectIdsFromSession = $request->session()->get('checked_projects', []);
+
+        // Fetch projects that the user does not have
+        $projects = Project::whereNotIn('id', $user->projects()->pluck('projects.id'))
+            ->paginate(10);
+
+        // $projects = $projects->paginate(10)->withQueryString();
+
+        $data = [
+            'projects' => $projects,
+            'worker' => $user,
+            'projectIdsFromSession' => $projectIdsFromSession,
+        ];
+
+        return view('contents.worker-management.worker-project.worker-project-assign', $data);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
+{
+    // Store the selected project IDs in the session
+    
+    $selectedProjects = $request->input('project_id', []);
+    $request->session()->put('selected_projects', $selectedProjects);
+
+    // Further processing or redirection after form submission
+}
+
+    public function updateCheckedProjectsSession(Request $request)
     {
-        //
+        $checkedProjects = $request->input('selected_projects');
+        session(['selected_projects' => $checkedProjects]);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Project_User  $project_User
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Project_User $project_User)
+    public function create(Request $request)
     {
-        //
+        $checkedProjects = $request->input('checkedProjects', '');
+        $checkedProjectsArray = explode(",", $checkedProjects);
+        $user_id = $request->input('userId', '');
+
+        foreach ($checkedProjectsArray as $project_id) {
+            $userProject = new ProjectUser();
+            $userProject->user_id = $user_id;
+            $userProject->project_id = $project_id;
+            $userProject->save();
+        }
+        // // $selectedProjects = $request->input('project_id', []);
+        // $selectedProjects = session("selected_projects");
+    
+        // // Update the session with the selected projects
+        // session(['selected_projects' => $selectedProjects]);
+        
+        // $projectIds = $request->input('project_id');
+
+        // // Loop through each project_id and create a user project
+        // foreach ($projectIds as $projectId) {
+        //     $userProject = new ProjectUser();
+        //     $userProject->user_id = $user_id;
+        //     $userProject->project_id = $projectId;
+        //     $userProject->save();
+        // }
+        $redirectUrl = '/workers/' . $user_id;
+        return response()->json(['redirect_url' => $redirectUrl]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Project_User  $project_User
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Project_User $project_User)
-    {
-        //
-    }
+    // public function updateProjectUser(Request $request, $project_id, $user_id)
+    // {
+    //     $request->validate([
+    //         'user_id' => 'required',
+    //     ]);
+        
+    //     ProjectUser::findOrFail($id)->update([
+    //         'user_id' => $request->user_id,
+    //     ]);
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Project_User  $project_User
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Project_User $project_User)
-    {
-        //
-    }
+    //     return redirect()->route('projectUser.read');
+    // }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Project_User  $project_User
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Project_User $project_User)
+    public function delete($user_id, $project_id)
     {
-        //
+        $user = User::findOrFail($user_id);
+
+        // Find the project belonging to the user
+        $user->projects()->detach($project_id);
+
+        return redirect()->route('worker.detail', $user_id);
+        
     }
 }

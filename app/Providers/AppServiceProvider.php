@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Carbon\Carbon;
+use Illuminate\Contracts\Pagination\Paginator;
 
 class AppServiceProvider extends ServiceProvider
 {
