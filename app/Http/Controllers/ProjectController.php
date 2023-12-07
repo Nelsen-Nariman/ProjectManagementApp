@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Project;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
@@ -39,7 +40,6 @@ class ProjectController extends Controller
 
     public function search(Request $request)
     {
-        // dd($request->all());
         $query = Project::query();
 
         if ($request->has("name")) {
@@ -76,6 +76,29 @@ class ProjectController extends Controller
             ];
 
             return view('contents.project-management.project-list', $data);
+        }
+    }
+
+    public function searchToAssign(Request $request, $user_id)
+    {
+        $user = User::findOrFail($user_id);
+        $projects = null;
+
+        $query = Project::whereNotIn('id', $user->projects()->pluck('projects.id'));
+        if ($request->has("search")) {
+            $projects = $query->where("name", "like", "%$request->search%")->paginate(10);
+        }
+
+        if ($projects->isEmpty()) {
+            return redirect()->to('/workers/' . $user_id . '/assign')->with('errorSearch', 'There\'s no such thing as you mentioned before :(');
+        } else {
+            $data = [
+                'projects' => $projects,
+                'worker' => $user,
+                'searchParam' => $request->search
+            ];
+
+            return view('contents.worker-management.worker-project.worker-project-assign', $data);
         }
     }
 
