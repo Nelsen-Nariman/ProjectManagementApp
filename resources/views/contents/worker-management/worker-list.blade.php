@@ -69,7 +69,7 @@
             </div>
         @endforeach
 
-        <div style="margin: 2rem 0">
+        <div style="margin: 2rem 0 0 0">
             {{$workers->links()}}
         </div>
     </div>
