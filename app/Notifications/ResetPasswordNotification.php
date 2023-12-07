@@ -32,7 +32,7 @@ class ResetPasswordNotification extends Notification
             ->line("You are receiving this email because we received a password reset request for your account.")
             ->action(Lang::get('Reset Password Now'), $this->resetUrl($notifiable))
             ->line(Lang::get('If you did not request a password reset, no further action is required. However, For extra security, it is still a good idea to update your password.'))
-            ->salutation(new HtmlString("Best regards,<br>Gendil Ho"));
+            ->salutation(new HtmlString("Best regards,<br>Mydealer"));
     }
 
     protected function resetUrl(mixed $notifiable): string

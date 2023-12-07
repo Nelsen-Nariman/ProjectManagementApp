@@ -43,6 +43,6 @@ class EmailVerificationNotification extends BaseVerifyEmail
             ->line(Lang::get('Please click the button below to verify your email address.'))
             ->action(Lang::get('Verify Email Now'), $url)
             ->line(Lang::get('Prior to resuming use of the application, we encourage you to confirm your email registration. However, If you are uncertain whether this email is registered in the application, you may disregard this message.'))
-            ->salutation(new HtmlString("Best regards,<br>Gendil Ho"));
+            ->salutation(new HtmlString("Best regards,<br>Mydealer"));
     }
 }

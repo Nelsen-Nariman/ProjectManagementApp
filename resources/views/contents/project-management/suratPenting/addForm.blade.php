@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('title')
-    addForm
+    Add Surat Penting
 @endsection
 
 @section('styling')

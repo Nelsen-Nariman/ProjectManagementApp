@@ -2,7 +2,7 @@
 
 
 @section('title')
-    Project Lists
+    Worker Lists
 @endsection
 
 

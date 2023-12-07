@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('title')
-    addForm
+    Add a Documentation
 @endsection
 
 @section('styling')
