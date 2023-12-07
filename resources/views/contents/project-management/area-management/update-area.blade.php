@@ -2,7 +2,7 @@
 
 
 @section('title')
-    Area Form
+    Update Area
 @endsection
 
 
