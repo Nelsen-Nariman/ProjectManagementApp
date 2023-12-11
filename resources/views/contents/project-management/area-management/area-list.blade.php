@@ -20,7 +20,7 @@
 
 <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
     <div class="mt-4">
-        <a href="{{ route('projects') }}" style=" text-decoration: none !important;
+        <a href="{{ route('project.detail', $project_id) }}" style=" text-decoration: none !important;
         color: white !important;">
             <button class="btn btn-secondary">
                 Back
