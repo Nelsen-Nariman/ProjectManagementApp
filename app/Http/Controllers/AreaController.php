@@ -54,22 +54,21 @@ class AreaController extends Controller{
         return view('contents.project-management.area-management.update-area', compact('area'));
     }
 
-    public function updateArea(Request $request,$id)
+    public function updateArea(Request $request, $id)
     {
         $request->validate([
             'areaName' => [
                 'required',
-                'unique:areas,name',
-                Rule::unique('areas', 'name')
+                Rule::unique('areas', 'name')->ignore($id),
             ],
             'areaDescription' => 'required|max:200',
         ]);
-        
+
         $area = Area::findOrFail($id);
 
-        Area::findOrFail($id)->update([
-            'name' => $request->areaName,
-            'description' => $request->areaDescription,
+        $area->update([
+            'name' => $request->input('areaName'),
+            'description' => $request->input('areaDescription'),
         ]);
 
         return redirect()->route('areas.index', $area->project_id);

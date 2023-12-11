@@ -157,13 +157,12 @@ class ProjectController extends Controller
         return view('contents.project-management.update-project', compact('project'));
     }
 
-    public function updateProject(Request $request, $id){
-
+    public function updateProject(Request $request, $id)
+    {
         $request->validate([
             'projectName' => [
                 'required',
-                'unique:projects,name',
-                Rule::unique('projects', 'name')
+                Rule::unique('projects', 'name')->ignore($id),
             ],
             'projectDescription' => 'required|max:200',
             'projectAddress' => 'required',
@@ -174,26 +173,29 @@ class ProjectController extends Controller
 
         $status = "On Progress";
         $progress = (int)$request->projectProgress; // Casting to integer for comparison
-        
+
         if ($progress === 100) {
-            $status = "Completed"; // Add a semicolon here
+            $status = "Completed";
         }
-        
+
         $date = \DateTime::createFromFormat('d-m-Y', $request->projectDeadline);
         $deadline = $date->format('Y-m-d');
-        
-        Project::findOrFail($id)->update([
-            'name' => $request->projectName,
-            'description' => $request->projectDescription,
-            'address' => $request->projectAddress,
-            'priority' => $request->projectPriority,
+
+        $project = Project::findOrFail($id);
+
+        $project->update([
+            'name' => $request->input('projectName'),
+            'description' => $request->input('projectDescription'),
+            'address' => $request->input('projectAddress'),
+            'priority' => $request->input('projectPriority'),
             'deadline' => $deadline,
-            'progress' => $request->projectProgress,
+            'progress' => $request->input('projectProgress'),
             'status' => $status
         ]);
 
         return redirect()->route('projects');
     }
+
 
     public function deleteProject(Request $request){
         $project = Project::find($request->id);

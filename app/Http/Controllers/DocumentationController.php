@@ -14,7 +14,7 @@ class DocumentationController extends Controller
     {
         $area = Area::findOrFail($area_id);
         $documentations = $area->documentations()->paginate(10);
-        return view('contents.project-management.area-management.documentation.manage', compact('documentations', 'area_id'));
+        return view('contents.project-management.area-management.documentation.manage', compact('documentations', 'area'));
     }
 
     public function addDocumentation(Request $request, $area_id)
@@ -57,13 +57,12 @@ class DocumentationController extends Controller
         return view('contents.project-management.area-management.documentation.updateForm', compact('documentation'));
     }
 
-    public function updateDocumentationLogic(Request $request, $id){
-
+    public function updateDocumentationLogic(Request $request, $id)
+    {
         $request->validate([
             'documentationName' => [
                 'required',
-                'unique:documentations,name',
-                Rule::unique('documentations', 'name')
+                Rule::unique('documentations', 'name')->ignore($id),
             ],
             'documentationDescription' => 'required|max:200',
             'documentationImage' => 'required',
@@ -72,20 +71,21 @@ class DocumentationController extends Controller
 
         $file = $request->file('documentationImage');
         $name = $file->getClientOriginalName();
-        $filename = now()->timestamp.'_'.$name;
+        $filename = now()->timestamp . '_' . $name;
 
         $imageUrl = Storage::disk('public')->putFileAs('ListImage', $file, $filename);
-        
-        $documentation = Documentation::findorFail($id);
 
-        Documentation::findOrFail($id)->update([
-            'name' => $request->documentationName,
-            'description' => $request->documentationDescription,
+        $documentation = Documentation::findOrFail($id);
+
+        $documentation->update([
+            'name' => $request->input('documentationName'),
+            'description' => $request->input('documentationDescription'),
             'image' => $imageUrl,
         ]);
 
         return redirect()->route('documentation.read', $documentation->area_id);
     }
+
 
     public function deleteDocumentation(Request $request){
         $documentation = Documentation::find($request->id);
