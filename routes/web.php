@@ -89,6 +89,8 @@ Route::middleware(['auth', 'verified'])->group(function() {
         Route::delete('/projects/areas/delete/{id}', [AreaController::class, 'deleteArea'])->name('area.delete');
 
     });
+    Route::get('/projects/detail/{id}', [ProjectController::class , 'projectDetail'])->name('project.detail');
+
     Route::get('/projects/{typeSorting}', [ProjectController::class, 'sorting'])->name('sorting');
 });
 
