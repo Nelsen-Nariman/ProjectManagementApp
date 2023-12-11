@@ -14,7 +14,7 @@
 
 .detail-button {
     margin-top: 16px;
-    background-color: blue!important;
+    background-color: #8DA5EA!important;
 }
 
 /* Detail */
@@ -29,8 +29,3 @@
 .delete-button {
     display: inline-block;
 }
-
-/* Show delete button when hovering over the project item
-.project-item:hover .delete-button {
-    display: inline-block;
-} */

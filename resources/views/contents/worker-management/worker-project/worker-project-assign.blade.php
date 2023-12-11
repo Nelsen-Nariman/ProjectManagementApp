@@ -59,7 +59,7 @@
             </div>
 
             
-            <button type="submit" style="background-color: blue; color:white" id="submitProjectsData" class="btn btn-outline-secondary mt-4">Add Selected Projects</button>
+            <button type="submit" style="background-color: #8DA5EA; color:white" id="submitProjectsData" class="btn btn-outline-secondary mt-4">Add Selected Projects</button>
         </div>
     </div>
 @endsection

@@ -39,7 +39,7 @@ class ProjectController extends Controller
         if ($currUser->role != "admin") {
             $projects = $currUser->projects();
         } elseif ($currUser->role == "admin") {
-            $projects = Project::all();
+            $projects = Project::query();
         }
 
         if ($typeSorting === "byProgress") {
@@ -100,7 +100,8 @@ class ProjectController extends Controller
         } else {
             $data = [
                 'projects' => $projects,
-                'searchParams' => $request->all()
+                'searchParams' => $request->all(),
+                'typeSorting' => null
             ];
 
             return view('contents.project-management.project-list', $data);

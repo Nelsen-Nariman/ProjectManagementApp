@@ -47,13 +47,13 @@
                 <h2 class="card-header">{{ $area->name }}</h2>
                 <div class="card-body">
                     <p class="card-text">{{ $area->description }}</p>
-                    <div class="d-md-flex justify-content-md-between align-items-md-center" style="padding-top: 10px">
+                    <div class="d-md-flex align-items-md-center" style="padding-top: 10px">
                         @if (Auth::user()->role == "admin")
                         <a href="{{ route('area.updateForm', $area->id) }}" class="btn btn-warning">Update</a>
-                        <form action="{{ route('area.delete', $area->id) }}" method="POST" style="display: inline;">
+                        <form action="{{ route('area.delete', $area->id) }}" method="POST" style="display: inline; margin: 0;">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="btn btn-primary" style="background-color:red; border-color:red" onclick="return confirm('Are you sure you want to delete this area?')">Delete</button>
+                            <button type="submit" class="btn btn-danger" style="background-color:red!important; border-color:red; margin: 0 5px" onclick="return confirm('Are you sure you want to delete this area?')">Delete</button>
                         </form>
                         @endif
                         <a href="{{ route('documentation.read', ['area_id' => $area->id]) }}" class="btn btn-primary">Dokumentasi</a>

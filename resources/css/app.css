@@ -9,5 +9,9 @@
     text-align: center;
     width: 100px; /* Width can be adjusted as needed */
     display: inline-block; /* Ensure it takes only required width */
-  }
-  
+}
+
+.btn-primary {
+  background-color: #8DA5EA!important;
+  border: none;
+}

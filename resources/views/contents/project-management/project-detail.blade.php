@@ -33,13 +33,13 @@
             </div>
 
             @if (Auth::user()->role == "admin")
-            <div class="d-md-flex justify-content-md-between align-items-md-center" style="padding-top: 10px">
+            <div class="d-md-flex align-items-md-center" style="padding-top: 10px">
                 <form action="{{ route('project.delete', $project->id) }}" method="POST" style="display: inline;">
                     @csrf
                     @method('DELETE')
-                    <button type="submit" class="btn btn-primary" style="background-color:red; border-color:red" onclick="return confirm('Are you sure you want to delete this project?')">Delete</button>
+                    <button type="submit" class="btn btn-danger" style="background-color:red!important;" onclick="return confirm('Are you sure you want to delete this project?')">Delete</button>
                 </form>
-            <a href="{{ route('project.updateForm', $project->id) }}" class="w-30 btn btn-warning detail-button">Update</a>
+            <a href="{{ route('project.updateForm', $project->id) }}" class="w-30 btn btn-warning detail-button" style="margin: 5px;">Update</a>
 
             </div>
             @endif
@@ -48,11 +48,11 @@
 
     <div class="card" style="margin-top: 20px">
         <div class="card-body">
-            <h5 class="card-title" style="font-size: 20px"><b>Resource hub</b></h5>
+            <h5 class="card-title" style="font-size: 20px"><b>Resource Hub</b></h5>
             <p class="mt-1 text-sm text-gray-600" style="padding-bottom: 15px">Contains area documentations and important files regarding this project</p>
-            <div class="d-md-flex justify-content-md-between align-items-md-center" style="padding-top: 10px">
+            <div class="d-md-flex align-items-md-center" style="padding-top: 10px">
                 <a href="{{ route('areas.index', ['project_id' => $project->id]) }}" class="w-30 btn btn-primary detail-button">Area</a>
-                <a href="{{ route('file.read', ['project_id' => $project->id]) }}" class="w-30 btn btn-primary detail-button">Important file</a>
+                <a href="{{ route('file.read', ['project_id' => $project->id]) }}" class="w-30 btn btn-primary detail-button" style="margin: 5px;">Important file</a>
             </div>
         </div>
     </div>
