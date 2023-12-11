@@ -57,13 +57,12 @@ class FileController extends Controller
         return view('contents.project-management.suratPenting.updateForm', compact('file'));
     }
 
-    public function updateFileLogic(Request $request, $id){
-
+    public function updateFileLogic(Request $request, $id)
+    {
         $request->validate([
             'fileName' => [
                 'required',
-                'unique:files,name',
-                Rule::unique('files', 'name')
+                Rule::unique('files', 'name')->ignore($id),
             ],
             'fileDescription' => 'required|max:200',
             'fileDoc' => 'required',
@@ -72,20 +71,21 @@ class FileController extends Controller
 
         $suratPenting = $request->file('fileDoc');
         $name = $suratPenting->getClientOriginalName();
-        $suratPentingName = now()->timestamp.'_'.$name;
+        $suratPentingName = now()->timestamp . '_' . $name;
 
         $suratPentingUrl = Storage::disk('public')->putFileAs('ListFile', $suratPenting, $suratPentingName);
-        
+
         $file = File::findOrFail($id);
 
-        File::findOrFail($id)->update([
-            'name' => $request->fileName,
-            'description' => $request->fileDescription,
+        $file->update([
+            'name' => $request->input('fileName'),
+            'description' => $request->input('fileDescription'),
             'doc' => $suratPentingUrl,
         ]);
 
         return redirect()->route('file.read', $file->project_id);
     }
+
 
     public function deleteFile(Request $request){
         $file = File::find($request->id);

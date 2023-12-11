@@ -61,20 +61,42 @@
                         </div>
 
                         <div class="update-btn">
-                            <a href="{{ route('file.update', $file->id) }}" style="text-decoration: none !important;
-                                color: black !important;">
-                                <img src="/images/edit.png" width="25px">
-                            </a>
+                            @if(auth()->user()->role === "worker")
+                                @if($file->project->progress != 100 )
+                                    <a href="{{ route('file.update', $file->id) }}" style="text-decoration: none !important;
+                                        color: black !important;">
+                                        <img src="/images/edit.png" width="25px">
+                                    </a>
+                                @endif
+
+                            @else
+                                <a href="{{ route('file.update', $file->id) }}" style="text-decoration: none !important;
+                                    color: black !important;">
+                                    <img src="/images/edit.png" width="25px">
+                                </a>
+                            @endif
                         </div>
 
                         <div class="delete-btn">
-                            <form action="{{ route('file.delete', ['id' => $file->id, 'area_id' => $file->project_id]) }}" method="POST">
-                                @csrf
-                                @method('DELETE')
-                                <button style="border: none; background-color: white;">
-                                    <img src="/images/delete.png" width="25px">
-                                </button>  
-                            </form>
+                            @if(auth()->user()->role === "worker")
+                                @if($file->project->progress != 100 )
+                                    <form action="{{ route('file.delete', ['id' => $file->id, 'area_id' => $file->project_id]) }}" method="POST">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button style="border: none; background-color: white;">
+                                            <img src="/images/delete.png" width="25px">
+                                        </button>  
+                                    </form>
+                                @endif
+                            @else
+                                <form action="{{ route('file.delete', ['id' => $file->id, 'area_id' => $file->project_id]) }}" method="POST">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button style="border: none; background-color: white;">
+                                        <img src="/images/delete.png" width="25px">
+                                    </button>  
+                                </form>
+                            @endif
                         </div>
                     </div>
                 </div>
