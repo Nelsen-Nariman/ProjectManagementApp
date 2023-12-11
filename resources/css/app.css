@@ -1,3 +1,13 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.priority-value {
+    color: white;
+    padding: 4px 8px;
+    border-radius: 3px;
+    text-align: center;
+    width: 100px; /* Width can be adjusted as needed */
+    display: inline-block; /* Ensure it takes only required width */
+  }
+  

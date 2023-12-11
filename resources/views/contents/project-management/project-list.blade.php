@@ -119,43 +119,58 @@
 
         {{-- Di bawah ini untuk project --}}
 
-        <div class="heading" style="display: flex; justify-content: center; gap: 2rem; margin-top: 3rem;">
-            <div class="btn1">
-                <a href="{{ route('add.project') }}" style="text-decoration: none !important;
-                color: white !important;">
-                    <button style="background-color: black" type="button" class="btn btn-secondary">
-                            Add Project
-                    </button>
-                </a>
+        @if (Auth::user()->role == "admin")
+            <div class="heading" style="display: flex; justify-content: center; gap: 2rem; margin-top: 3rem;">
+                <div class="btn1">
+                    <a href="{{ route('add.project') }}" style="text-decoration: none !important;
+                    color: white !important;">
+                        <button style="background-color: black" type="button" class="btn btn-secondary">
+                                Add Project
+                        </button>
+                    </a>
+                </div>
             </div>
-        </div>
-
+        @endif
+<!-- 
         <div class="d-grid gap-2 d-md-block" style="padding-top: 10px">
             <a href="{{ route('sorting', ['typeSorting' => 'byProgress']) }}" class="btn btn-primary" style="background-color: #D2B832; border: none">Progress</a>
             <a href="{{ route('sorting', ['typeSorting' => 'byName']) }}" class="btn btn-primary">A - Z</a>
+        </div> -->
+        <div class="d-grid gap-2 d-md-block d-flex" style="padding-top: 20px; padding-left: 15px; margin-bottom: -20px">
+            <a href="{{ route('sorting', ['typeSorting' => 'byProgress']) }}" class="btn btn-primary" style="background-color: {{ $typeSorting === 'byProgress' ? '#8DA5EA' : '#fff' }}; color: {{ $typeSorting === 'byProgress' ? '#fff' : '#8F8F8F' }}; border: 1; border-color: #8F8F8F; border-radius: 20px;">Progress</a>
+            <a href="{{ route('sorting', ['typeSorting' => 'byName']) }}" class="btn btn-primary" style="background-color: {{ $typeSorting === 'byName' ? '#8DA5EA' : '#fff' }}; color: {{ $typeSorting === 'byName' ? '#fff' : '#8F8F8F' }}; border-color: #8F8F8F; border-radius: 20px;">A - Z</a>
         </div>
 
         @foreach ($projects as $project)
-            <div class="card" style="margin-top: 20px">
+        <div class="centering" style="display: flex; justify-content: center; margin-top: 1rem;">
+            <div class="card" style="margin-top: 20px; width: 21rem;">
                 <div class="card-body">
-                    <h5 class="card-title">{{ $project->name }}</h5>
-
+                    <!-- <h5 class="card-title">{{ $project->name }}</h5> -->
+                    <h5 id="card-title" class="card-title"><b>{{ $project->name }}</b></h5>
                     <p class="card-text"><i class="fas fa-map-marker-alt" style="padding-right: 7px; color: #8F8F8F"></i>  {{ $project->address }}</p>
                     <div class="progress" style="margin-top: 10px">
-                        <div class="progress-bar" role="progressbar" style="width: {{$project->progress}}%;" aria-valuenow="{{$project->progress}}" aria-valuemin="0" aria-valuemax="100">{{$project->progress}}%</div>
+                        <div class="progress-bar" role="progressbar" style="width: {{$project->progress}}%; background-color: #8DA5EA;" aria-valuenow="{{$project->progress}}" aria-valuemin="0" aria-valuemax="100">{{$project->progress}}%</div>
                     </div>
-                    <div class="d-grid gap-2 d-md-block" style="padding-top: 10px">
-                        <a href="{{ route('project.updateForm', $project->id) }}" class="btn btn-primary" style="background-color: #D2B832; border: none">Update</a>
-                        <a href="{{ route('areas.index', ['project_id' => $project->id]) }}" class="btn btn-primary">Area</a>
-                        <a href="{{ route('file.read', ['project_id' => $project->id]) }}" class="btn btn-primary" style="background-color: green; border: none">Surat Penting</a>
-                        <form action="{{ route('project.delete', $project->id) }}" method="POST" style="display: inline;">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-primary" style="background-color:red; border-color:red" onclick="return confirm('Are you sure you want to delete this project?')">Delete</button>
-                        </form>
+                </div>
+                <div class="card-header" style="background-color: #Fff; padding-bottom: 15px">
+                    <div class="d-flex justify-content-between align-items-center">
+                        @if ($project->priority == 'High')
+                            <span class="priority-value" style="background-color: #FFD3D3; color: #000">{{ $project->priority }}</span>
+                        @endif
+                        @if ($project->priority == 'Mid')
+                            <span class="priority-value" style="background-color: #FFEED3; color: #000">{{ $project->priority }}</span>
+                        @endif
+                        @if ($project->priority == 'Low')
+                            <span class="priority-value" style="background-color: #D7F5DF; color: #000">{{ $project->priority }}</span>
+                        @endif
+                        <button onclick="window.location='{{ route('project.detail', $project->id) }}'" class="btn btn-primary" style="background-color: #8DA5EA; border: none; border-radius: 20px">
+                            <i class="fa fa-arrow-right"></i>
+                        </button>
                     </div>
                 </div>
             </div>
+        </div>
+
         @endforeach
 
         <div style="margin: 2rem 0 0 0">

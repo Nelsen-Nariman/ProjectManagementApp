@@ -20,9 +20,12 @@ class ProjectController extends Controller
             $projects = Project::paginate(10)->withQueryString();
         }
 
+        $typeSorting = "";
+
         $data = [
             'projects' => $projects,
-            'searchParam' => session('searchParams', [])
+            'searchParam' => session('searchParams', []),
+            'typeSorting' => $typeSorting
         ];
 
         return view('contents.project-management.project-list', $data);
@@ -31,15 +34,23 @@ class ProjectController extends Controller
     public function sorting($typeSorting)
     {
         $sorted = null;
+        $currUser = Auth::user();
+
+        if ($currUser->role != "admin") {
+            $projects = $currUser->projects();
+        } elseif ($currUser->role == "admin") {
+            $projects = Project::all();
+        }
 
         if ($typeSorting === "byProgress") {
-            $sorted = Project::orderBy('progress', 'desc')->paginate(10)->withQueryString();
+            $sorted = $projects->orderBy('progress', 'desc')->paginate(10)->withQueryString();
         }else if ($typeSorting === "byName") {
-            $sorted = Project::orderBy('name', 'asc')->paginate(10)->withQueryString();
+            $sorted = $projects->orderBy('name', 'asc')->paginate(10)->withQueryString();
         }
         
         $data = [
-            'projects' => $sorted
+            'projects' => $sorted,
+            'typeSorting' => $typeSorting
         ];
 
         return view('contents.project-management.project-list', $data);
@@ -155,6 +166,13 @@ class ProjectController extends Controller
         $dateTime = new \DateTime($project->deadline);
         $project->deadline = $dateTime->format('d-m-Y');
         return view('contents.project-management.update-project', compact('project'));
+    }
+
+    public function projectDetail($id){
+        $project = Project::findorFail($id);
+        $dateTime = new \DateTime($project->deadline);
+        $project->deadline = $dateTime->format('d-m-Y');
+        return view('contents.project-management.project-detail', compact('project'));
     }
 
     public function updateProject(Request $request, $id){
