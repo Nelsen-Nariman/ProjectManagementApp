@@ -13,7 +13,7 @@
 
 <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
     <div class="mt-4">
-        <a href="{{ route('projects') }}" style=" text-decoration: none !important;
+        <a href="{{ route('areas.index', ['project_id' => $area->project_id]) }}" style=" text-decoration: none !important;
         color: white !important;">
             <button class="btn btn-secondary">
                 Back
@@ -24,10 +24,10 @@
 
 <div class="heading" style="display: flex; justify-content: center; gap: 2rem; margin-top: 3rem;">
         <div class="btn1">
-            <a href="{{ route('documentation.addForm', ['area_id' => $area_id]) }}" style="text-decoration: none !important;
+            <a href="{{ route('documentation.addForm', ['area_id' => $area->id]) }}" style="text-decoration: none !important;
             color: white !important;">
                 <button style="background-color: black" type="button" class="btn btn-secondary">
-                        Add Documentation
+                    Add Documentation
                 </button>
             </a>
         </div>
@@ -60,10 +60,33 @@
                 <div class="layouting" style="display: flex; justify-content: space-between;">
                     <h5 class="card-title">{{ $documentation->name }}</h5>
                     <div class="modified" style="display: flex; justify-content: space-evenly; gap: 1rem; padding-bottom: 20px">
+                    @if(auth()->user()->role === "worker")
+                        @if($documentation->area->project->progress != 100 )
+                            <a href="{{ route('documentation.update', $documentation->id) }}" style="text-decoration: none !important;
+                                color: black !important;">
+                                <img src="/images/edit.png" width="25px">
+                            </a>
+                        @endif
+
+                    @else
                         <a href="{{ route('documentation.update', $documentation->id) }}" style="text-decoration: none !important;
                             color: black !important;">
                             <img src="/images/edit.png" width="25px">
                         </a>
+                    @endif
+
+                    @if(auth()->user()->role === "worker")
+                        @if($documentation->area->project->progress != 100 )
+                            <form action="{{ route('documentation.delete', ['id' => $documentation->id, 'area_id' => $documentation->area_id]) }}" method="POST">
+                                @csrf
+                                @method('DELETE')
+                                <button style="border: none; background-color: white;">
+                                    <img src="/images/delete.png" width="25px">
+                                </button>  
+                            </form>
+                        @endif
+                    
+                    @else
                         <form action="{{ route('documentation.delete', ['id' => $documentation->id, 'area_id' => $documentation->area_id]) }}" method="POST">
                             @csrf
                             @method('DELETE')
@@ -71,6 +94,7 @@
                                 <img src="/images/delete.png" width="25px">
                             </button>  
                         </form>
+                    @endif
                     </div>
                 </div>
                 <p class="card-text">{{ $documentation->description }}</p>
