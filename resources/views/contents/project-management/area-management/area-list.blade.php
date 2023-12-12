@@ -46,7 +46,7 @@
             <div class="card" style="margin-top: 20px">
                 <h2 class="card-header">{{ $area->name }}</h2>
                 <div class="card-body">
-                    <p class="card-text">{{ $area->description }}</p>
+                    <p class="mt-1 text-sm text-gray-600" style="padding-bottom: 15px">{{ $area->description }}</p>
                     <div class="d-md-flex align-items-md-center" style="padding-top: 10px">
                         @if (Auth::user()->role == "admin")
                         <a href="{{ route('area.updateForm', $area->id) }}" class="btn btn-warning">Update</a>
