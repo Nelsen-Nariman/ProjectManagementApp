@@ -46,13 +46,13 @@
 
                         <div class="download-btn" style="padding-right: 20px">
                             @if(file_exists(public_path().'\storage/'.$file->doc))
-                                <a href="{{ asset('storage/'.$file->doc) }}">
+                                <a href="{{ asset('storage/'.$file->doc) }}" download>
                                     <button style="background-color: green" class="btn btn-success btn-sm" type="button">
                                         Download
                                     </button>
                                 </a>
                             @else
-                                <a href="{{ $file->doc }}">
+                                <a href="{{ $file->doc }}" download>
                                     <button style="background-color: green" class="btn btn-success btn-sm" type="button">
                                         Download
                                     </button>
