@@ -76,6 +76,8 @@ class DocumentationController extends Controller
             $filename = now()->timestamp . '_' . $name;
     
             $imageUrl = Storage::disk('public')->putFileAs('ListImage', $file, $filename);
+            $image_path = public_path().'\storage/'.$documentation->image;
+            unlink($image_path);
     
             $documentation->update([
                 'name' => $request->input('documentationName'),
