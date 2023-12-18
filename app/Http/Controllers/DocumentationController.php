@@ -65,23 +65,29 @@ class DocumentationController extends Controller
                 Rule::unique('documentations', 'name')->ignore($id),
             ],
             'documentationDescription' => 'required|max:200',
-            'documentationImage' => 'required',
-            'documentationImage.*' => 'file|mimes:jpg,png,jpeg',
+            'documentationImage' => 'sometimes|file|mimes:jpg,png,jpeg',
         ]);
-
-        $file = $request->file('documentationImage');
-        $name = $file->getClientOriginalName();
-        $filename = now()->timestamp . '_' . $name;
-
-        $imageUrl = Storage::disk('public')->putFileAs('ListImage', $file, $filename);
-
+    
         $documentation = Documentation::findOrFail($id);
-
-        $documentation->update([
-            'name' => $request->input('documentationName'),
-            'description' => $request->input('documentationDescription'),
-            'image' => $imageUrl,
-        ]);
+    
+        if ($request->hasFile('documentationImage')) {
+            $file = $request->file('documentationImage');
+            $name = $file->getClientOriginalName();
+            $filename = now()->timestamp . '_' . $name;
+    
+            $imageUrl = Storage::disk('public')->putFileAs('ListImage', $file, $filename);
+    
+            $documentation->update([
+                'name' => $request->input('documentationName'),
+                'description' => $request->input('documentationDescription'),
+                'image' => $imageUrl,
+            ]);
+        } else {
+            $documentation->update([
+                'name' => $request->input('documentationName'),
+                'description' => $request->input('documentationDescription'),
+            ]);
+        }
 
         return redirect()->route('documentation.read', $documentation->area_id);
     }
